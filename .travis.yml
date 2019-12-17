@@ -16,7 +16,8 @@ cache:
     - $HOME/.sbt
 
 script:
-  - sbt 'set parallelExecution in ThisBuild := false' clean coverage test coverageReport && sbt coverageAggregate
+#  - sbt 'set parallelExecution in ThisBuild := false' clean coverage test coverageReport && sbt coverageAggregate
+  - sbt clean compile test
 
 after_success:
   - sbt scalafmtCheck
