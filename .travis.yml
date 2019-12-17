@@ -12,8 +12,8 @@
 # GENERAL SETTINGS
 
 language: scala
-scala: 
-	- 2.12.8
+scala:
+  - 2.12.8
 
 dist: bionic			# Ubuntu 18.04 LTS, latest LTS available as of dec 2019
 
@@ -48,12 +48,10 @@ script:
 	- sbt ++$TRAVIS_SCALA_VERSION test
 
 # Trick to avoid unnecessary cache updates
-  - find $HOME/.sbt -name "*.lock" | xargs rm
+# - find $HOME/.sbt -name "*.lock" | xargs rm
 
 notifications:
   email:
     recipients:
       - roaldvanderheijden@gmail.com
-			- zonneveld.noordwijk@gmail.com
-
-
+      - zonneveld.noordwijk@gmail.com
