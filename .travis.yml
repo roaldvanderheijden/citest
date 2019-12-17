@@ -1,59 +1,27 @@
-################################################################################
-#           Configuration file for Travis CI/Github                            #
-#                                                                              #
-# This file contains settings to build the CodeFeedr extensions by team 1Up    #
-#                                                                              #
-# Author: Roald van der Heijden                                                #
-# Date:   2019-12-17 (YYYY-MM-DD)                                              #
-#                                                                              #
-################################################################################
-
-
-# GENERAL SETTINGS
-
 language: scala
-scala: 
-	- 2.12.8
+scala:
+  - 2.12.8
+sudo: required
+dist: xenial
+jdk: openjdk11
 
-dist: bionic			# Ubuntu 18.04 LTS, latest LTS available as of dec 2019
+before_cache:
+  # Cleanup the cached directories to avoid unnecessary cache updates
+  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -print -delete
+  - find $HOME/.sbt        -name "*.lock"               -print -delete
 
-jdk: openjdk8			# to use scala 2.12.X openjdk needs to be set as default!
-
-
-# GIT SETTINGS
-
-git:
-  depth: 6 
-
-# Please note that if you use a depth of 1 and have a queue of jobs, 
-# Travis CI won’t build commits that are in the queue when you push a new 
-# commit. 
-#
-# So that means that team 1Up, consisting of 3 members should be 
-# safe if we allow 2 pushes per member...
-
-
-# SBT
-
-# if your project has a project directory or build.sbt file 
-# in the repository root, the Travis CI uses sbt to build it.
-# 
-# Thanks to paulp/sbt-extras the sbt version of your project 
-# is dynamically detected and used.
-
-
-# BUILD, TEST & WHATEVAH
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt
 
 script:
-	- sbt ++$TRAVIS_SCALA_VERSION test
+#  - sbt 'set parallelExecution in ThisBuild := false' clean coverage test coverageReport && sbt coverageAggregate
+  - sbt clean compile test
 
-# Trick to avoid unnecessary cache updates
-  - find $HOME/.sbt -name "*.lock" | xargs rm
+after_success:
+  - sbt scalafmtCheck
+  - sbt coveralls
 
 notifications:
-  email:
-    recipients:
-      - roaldvanderheijden@gmail.com
-			- zonneveld.noordwijk@gmail.com
-
-
+  email: false
